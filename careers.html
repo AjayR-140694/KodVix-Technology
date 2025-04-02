@@ -62,7 +62,7 @@
     </section>
     <div class="career">
         <div class="career-form">
-            <form onsubmit="event.preventDefault(); sendJobMail();">
+            <form id="careerForm" onsubmit="return validateForm(event)">
 
                 <input type="text" id="name" name="name" placeholder="Name" class="career-form-txt" required>
 
@@ -108,6 +108,100 @@
         </div>
     </div>
 
+    <div id="validationPopup" class="validation-popup">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+
+    <style>
+        .validation-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            text-align: center;
+        }
+        .close-popup {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const status = document.querySelector('input[name="status"]:checked');
+            const link = document.getElementById('link').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name) {
+                showPopup('Please enter your name');
+                return false;
+            }
+            if (!phone) {
+                showPopup('Please enter your contact number');
+                return false;
+            }
+            if (!email) {
+                showPopup('Please enter your email');
+                return false;
+            }
+            if (!status) {
+                showPopup('Please select a position to apply for');
+                return false;
+            }
+            if (!link) {
+                showPopup('Please paste your CV link');
+                return false;
+            }
+            if (!message) {
+                showPopup('Please enter your cover letter');
+                return false;
+            }
+
+            // If all validations pass, proceed with form submission
+            sendJobMail();
+            return false;
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById('validationPopup');
+            const popupMessage = document.getElementById('popupMessage');
+            popupMessage.textContent = message;
+            popup.style.display = 'block';
+        }
+
+        // Close popup when clicking the close button
+        document.querySelector('.close-popup').addEventListener('click', function() {
+            document.getElementById('validationPopup').style.display = 'none';
+        });
+
+        // Close popup when clicking outside
+        window.addEventListener('click', function(event) {
+            const popup = document.getElementById('validationPopup');
+            if (event.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+    </script>
 
     <div class="footer">
         <div class="footer-top">
